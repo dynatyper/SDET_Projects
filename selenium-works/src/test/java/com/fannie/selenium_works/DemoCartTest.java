@@ -50,6 +50,9 @@ public class DemoCartTest {
 		driver.findElement(By.id("subject")).sendKeys("Testing");
 		driver.findElement(By.id("message")).sendKeys("Some message");
 		
+		//Send message
+		driver.findElement(By.xpath("//*[contains(text(),'Send')]")).click();
+		
 		
 	}
 
