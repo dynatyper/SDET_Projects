@@ -11,6 +11,10 @@ public class ElearningPOM {
 		this.driver = driver;
 	}
 	
+	public void navigateToWebPage(String url){
+		driver.get(url);
+	}
+	
 	public void sendUsername(String emailId) {
 		driver.findElement(By.id("form-login_submitAuth")).clear();
 		driver.findElement(By.id("form-login_submitAuth")).sendKeys(emailId);	
@@ -22,7 +26,15 @@ public class ElearningPOM {
 	}
 	
 	public void clickLogin(){
-		driver.findElement(By.id("")).click();
+		driver.findElement(By.id("login")).click();
+	}
+	
+	public void clickSubscribeToCourse(String courseName){
+		driver.findElement(By.name(courseName)).click();
+	}
+	
+	public void navigateToUserPage(String userPageByXpath){
+		driver.findElement(By.id(userPageByXpath)).click();
 	}
 	
 }
