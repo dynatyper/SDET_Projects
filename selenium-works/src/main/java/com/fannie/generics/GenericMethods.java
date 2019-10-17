@@ -24,6 +24,8 @@ public class GenericMethods {
 			element = this.driver.findElement(By.cssSelector(locator));
 		}else if(type.equals("linktext")){
 			element = this.driver.findElement(By.linkText(locator));
+		}else if(type.equals("xpath")){
+			element = this.driver.findElement(By.xpath(locator));
 		}
 		
 		if(checkSingleEntry(locator, type)){
@@ -45,6 +47,8 @@ public class GenericMethods {
 			return this.driver.findElements(By.cssSelector(locator));
 		}else if(type.equals("linktext")){
 			return this.driver.findElements(By.linkText(locator));
+		}else if(type.equals("xpath")){
+			return this.driver.findElements(By.xpath(locator));
 		}else{
 			System.out.println("Locator not found.");
 			return null;
