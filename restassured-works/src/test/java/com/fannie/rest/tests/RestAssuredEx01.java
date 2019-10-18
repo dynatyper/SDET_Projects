@@ -1,11 +1,25 @@
 package com.fannie.rest.tests;
 
 import static org.hamcrest.Matchers.*;
+
+import java.util.List;
+
+import org.junit.Before;
 import org.junit.Test;
+
+import io.restassured.http.Cookie;
+import io.restassured.http.Header;
+import io.restassured.path.json.JsonPath;
+import io.restassured.response.Response;
 
 import static io.restassured.RestAssured.*;
 
 public class RestAssuredEx01 {
+	
+	@Before
+	public void setup(){
+		baseURI = "http://ecommerceapiservices.herokuapp.com/";
+	}
 
 	// @Test
 	// public void testStatusCode(){
@@ -112,7 +126,7 @@ public class RestAssuredEx01 {
 
 	}
 	
-	@Test
+//	@Test
 	public void testWithAuthCartIdWithRootDetachAndAttach() {
 		String path = "http://ecommerceapiservices.herokuapp.com/v1/account/";
 		String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6ImU1N2U5YmNjLTg4MWMtNDRlMy04MzJiLWQzZGU4MTU3Njg0NCIsImlhdCI6MTU3MTQxNjA3OX0.MM2t0udKRt4F1KuN8H7EPMoq2NA7YXxrfzX5e_fmgfo";
@@ -133,6 +147,84 @@ public class RestAssuredEx01 {
 			.log()
 			.all();
 
+	}
+	
+//	@Test
+	public void testCreateCart() {
+		String uri = "/v1/carts";
+		
+		String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6ImU1N2U5YmNjLTg4MWMtNDRlMy04MzJiLWQzZGU4MTU3Njg0NCIsImlhdCI6MTU3MTQxNjA3OX0.MM2t0udKRt4F1KuN8H7EPMoq2NA7YXxrfzX5e_fmgfo";
+
+		given()
+			.header("Authorization", "Bearer " + token)
+		.when()
+			.post(uri)
+		.then()
+			.statusCode(201);
+	}
+	
+//	@Test
+	public void testPhotosResponse(){
+		String path = "https://jsonplaceholder.typicode.com/photos/1";
+		
+		Response response = when().get(path).then().extract().response();
+		
+		String url = response.path("url");
+		String thumbNail = response.path("thumbnailUrl");
+		
+		System.out.println("Response url " + url);
+		System.out.println("Response Thumbnail " + thumbNail);
+		System.out.println("Response status code " + response.getStatusCode());
+		System.out.println("Response content type " + response.contentType());
+		
+		get(url).then().statusCode(200);
+		get(thumbNail).then().statusCode(200);
+	}
+	
+//	@Test
+	public void getHeaderInformation(){
+		String path = "https://jsonplaceholder.typicode.com/photos/1";
+		
+		Response response = get(path);
+		String expires = response.getHeader("expires");
+		String contentType = response.getHeader("content-type");
+		
+		System.out.println("Response expiration " + expires);
+		System.out.println("Response content type " + contentType);
+		
+		System.out.println("All header information goes here");
+		System.out.println("--------------------------------");
+		for(Header header : response.getHeaders()){
+			System.out.println(header.getName() + ", " + header.getValue());
+		}
+	}
+	
+//	@Test
+	public void getCookieInformation(){
+		String path = "https://jsonplaceholder.typicode.com/photos/1";
+		
+		Response response = get(path);
+		Cookie cookie = response.getDetailedCookie("__cfduid");
+		
+		System.out.println("Cookie has expiry date: " + cookie.hasExpiryDate());
+		System.out.println("Cookie expiry is: " + cookie.getExpiryDate());
+		System.out.println("Cookie value: " + cookie.getValue());
+		System.out.println("Cookie max age: " + cookie.getMaxAge());
+		
+	}
+	
+	@Test
+	 public void testExtractStringAndJson() {
+		String jsonString = when().get("https://jsonplaceholder.typicode.com/photos/").then().extract().asString();
+		
+		System.out.println(jsonString);
+		System.out.println("Length " + jsonString.length());
+		
+		JsonPath json = new JsonPath(jsonString);
+		List<String> titles = json.get("title");
+		
+		System.out.println("Title list size: " + titles.size());
+	
 	}
 	
 }
